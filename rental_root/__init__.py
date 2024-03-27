@@ -30,7 +30,7 @@ def create_app(config_name):
     migrate.init_app(app=app, db=db)
 
     global redis_store
-    redis_store = redis.StrictRedis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT, health_check_interval=30)
+    redis_store = redis.Redis(host=config_class.REDIS_HOST, port=config_class.REDIS_PORT, health_check_interval=30)
     Session(app)
     CSRFProtect(app)
 
