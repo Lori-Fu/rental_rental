@@ -1,6 +1,7 @@
 from datetime import datetime
 from . import db
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt
 from rental_root import constants
 
 
@@ -26,10 +27,18 @@ class User(BaseModel, db.Model):
 
     @password.setter
     def password(self, value):
-        self.password_hash = generate_password_hash(value)
+        # self.password_hash = generate_password_hash(value)
+        bytes = value.encode()
+        salt = bcrypt.gensalt()
+        hash = bcrypt.hashpw(bytes, salt)
+        self.password_hash = hash
 
     def check_password(self, value):
-        return check_password_hash(self.password_hash, value)
+        # return check_password_hash(self.password_hash, value)
+        userBytes = value.encode('utf-8')
+
+        # checking password
+        return bcrypt.checkpw(userBytes, self.password_hash.encode('utf-8'))
 
 
 class Area(BaseModel, db.Model):
